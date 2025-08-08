@@ -3,7 +3,7 @@ export interface User {
   name: string;
   email: string;
   walletAddress: string;
-  totalDonated: number;
+  totalDonations: number;
   nftTrees: NFTTree[];
   joinedAt: string;
 }

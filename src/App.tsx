@@ -9,14 +9,16 @@ import NFTTrees from './pages/NFTTrees';
 function App() {
   return (
     <Router>
-      <Layout>
+      <div className="min-h-screen">
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/charities" element={<Charities />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/nft-trees" element={<NFTTrees />} />
+          <Route path="/" element={<Layout />}>
+            <Route index element={<Home />} />
+            <Route path="charities" element={<Charities />} />
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="nft-trees" element={<NFTTrees />} />
+          </Route>
         </Routes>
-      </Layout>
+      </div>
     </Router>
   );
 }

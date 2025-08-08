@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Search, MapPin, Users, TrendingUp, Shield, Heart } from 'lucide-react';
+import { Search, Filter, MapPin, Users, DollarSign, CheckCircle } from 'lucide-react';
+import { mockCharities } from '../data/mockData';
 import GlassCard from '../components/UI/GlassCard';
 import GlassButton from '../components/UI/GlassButton';
-import { mockCharities } from '../data/mockData';
 
 const Charities: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('All');
 
-  const categories = ['All', 'Children & Education', 'Elderly Care', 'Water & Sanitation', 'Environment', 'Healthcare', 'Education'];
+  const categories = ['All', 'Children', 'Elderly', 'Environment', 'Education', 'Wildlife', 'Emergency'];
 
   const filteredCharities = mockCharities.filter(charity => {
     const matchesSearch = charity.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -31,119 +31,101 @@ const Charities: React.FC = () => {
             Verified Charities
           </h1>
           <p className="text-xl text-white/70 max-w-2xl mx-auto">
-            Support verified charitable organizations and make a real impact with transparent, blockchain-recorded donations.
+            Support verified charitable organizations worldwide with transparent blockchain donations.
           </p>
         </div>
 
-        {/* Search and Filters */}
-        <GlassCard className="mb-8">
-          <div className="flex flex-col lg:flex-row gap-4">
-            {/* Search */}
-            <div className="flex-1 relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/50" />
-              <input
-                type="text"
-                placeholder="Search charities..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 glass rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
-              />
-            </div>
-
-            {/* Category Filter */}
-            <div className="flex flex-wrap gap-2">
-              {categories.map((category) => (
-                <button
-                  key={category}
-                  onClick={() => setSelectedCategory(category)}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-                    selectedCategory === category
-                      ? 'glass-button text-white'
-                      : 'glass border-white/20 text-white/70 hover:text-white'
-                  }`}
+        {/* Search and Filter */}
+        <div className="mb-8">
+          <GlassCard>
+            <div className="flex flex-col md:flex-row gap-4">
+              <div className="flex-1 relative">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-white/50" />
+                <input
+                  type="text"
+                  placeholder="Search charities..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white placeholder-white/50 focus:outline-none focus:ring-2 focus:ring-white/30"
+                />
+              </div>
+              <div className="flex items-center gap-2">
+                <Filter className="h-5 w-5 text-white/70" />
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="px-4 py-3 bg-white/10 border border-white/20 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-white/30"
                 >
-                  {category}
-                </button>
-              ))}
+                  {categories.map(category => (
+                    <option key={category} value={category} className="bg-gray-800">
+                      {category}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
-          </div>
-        </GlassCard>
+          </GlassCard>
+        </div>
 
         {/* Charities Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredCharities.map((charity) => (
-            <GlassCard key={charity.id} hover className="h-full flex flex-col">
-              {/* Image */}
-              <div className="relative mb-6 rounded-xl overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          {filteredCharities.map(charity => (
+            <GlassCard key={charity.id} hover>
+              <div className="relative">
                 <img
                   src={charity.image}
                   alt={charity.name}
-                  className="w-full h-48 object-cover"
+                  className="w-full h-48 object-cover rounded-xl mb-4"
                 />
-                <div className="absolute top-4 right-4">
-                  {charity.verified && (
-                    <div className="glass-button p-2 rounded-full">
-                      <Shield className="h-4 w-4 text-green-400" />
-                    </div>
-                  )}
+                {charity.verified && (
+                  <div className="absolute top-2 right-2 glass-button p-2 rounded-full">
+                    <CheckCircle className="h-5 w-5 text-green-400" />
+                  </div>
+                )}
+                <div className="absolute top-2 left-2 glass-button px-3 py-1 rounded-full">
+                  <span className="text-sm font-medium text-white">{charity.category}</span>
                 </div>
               </div>
 
-              {/* Content */}
-              <div className="flex-1 flex flex-col">
-                <div className="mb-4">
-                  <h3 className="text-xl font-semibold text-white mb-2">{charity.name}</h3>
-                  <p className="text-white/70 text-sm mb-3 line-clamp-3">{charity.description}</p>
-                  <div className="flex items-center space-x-4 text-sm text-white/60">
-                    <div className="flex items-center space-x-1">
-                      <MapPin className="h-4 w-4" />
-                      <span>{charity.location}</span>
-                    </div>
-                    <span className="px-2 py-1 glass rounded-full text-xs">{charity.category}</span>
-                  </div>
-                </div>
+              <h3 className="text-xl font-semibold text-white mb-2">{charity.name}</h3>
+              <p className="text-white/70 text-sm mb-4 line-clamp-3">{charity.description}</p>
 
-                {/* Stats */}
-                <div className="grid grid-cols-2 gap-4 mb-6">
-                  <div className="text-center">
-                    <div className="flex items-center justify-center mb-1">
-                      <TrendingUp className="h-4 w-4 text-green-400 mr-1" />
-                      <span className="text-lg font-semibold text-white">{charity.totalReceived} ETH</span>
-                    </div>
-                    <span className="text-xs text-white/60">Total Received</span>
-                  </div>
-                  <div className="text-center">
-                    <div className="flex items-center justify-center mb-1">
-                      <Users className="h-4 w-4 text-blue-400 mr-1" />
-                      <span className="text-lg font-semibold text-white">{charity.donorCount}</span>
-                    </div>
-                    <span className="text-xs text-white/60">Donors</span>
-                  </div>
+              <div className="flex items-center gap-4 mb-4 text-sm text-white/60">
+                <div className="flex items-center gap-1">
+                  <MapPin className="h-4 w-4" />
+                  <span>{charity.location}</span>
                 </div>
-
-                {/* Action Button */}
-                <div className="mt-auto">
-                  <GlassButton
-                    onClick={() => handleDonate(charity.id)}
-                    className="w-full flex items-center justify-center space-x-2"
-                  >
-                    <Heart className="h-4 w-4" />
-                    <span>Donate Now</span>
-                  </GlassButton>
+                <div className="flex items-center gap-1">
+                  <Users className="h-4 w-4" />
+                  <span>{charity.donorCount} donors</span>
                 </div>
               </div>
+
+              <div className="flex items-center justify-between mb-6">
+                <div>
+                  <div className="flex items-center gap-1 text-white">
+                    <DollarSign className="h-4 w-4" />
+                    <span className="font-semibold">{charity.totalReceived} ETH</span>
+                  </div>
+                  <div className="text-xs text-white/60">Total received</div>
+                </div>
+              </div>
+
+              <GlassButton
+                onClick={() => handleDonate(charity.id)}
+                className="w-full"
+              >
+                Donate Now
+              </GlassButton>
             </GlassCard>
           ))}
         </div>
 
-        {/* No Results */}
         {filteredCharities.length === 0 && (
           <div className="text-center py-12">
-            <div className="glass-card rounded-2xl p-8 max-w-md mx-auto">
-              <Search className="h-12 w-12 text-white/50 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-white mb-2">No charities found</h3>
-              <p className="text-white/70">Try adjusting your search terms or filters.</p>
-            </div>
+            <GlassCard>
+              <p className="text-white/70 text-lg">No charities found matching your criteria.</p>
+            </GlassCard>
           </div>
         )}
       </div>
